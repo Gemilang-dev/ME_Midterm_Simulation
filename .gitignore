@@ -1,0 +1,15 @@
+# Ignore all images / exam screenshots
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.bmp
+
+# Ignore Original Midterm Pack 1 (Copyright Protection - Local Use Only)
+questions_pack1.js
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/

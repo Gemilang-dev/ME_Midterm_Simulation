@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Managerial Economics Midterm Exam Simulator (54 Questions)</title>
+  <style>
+    :root {
+      --primary: #0066cc;
+      --primary-dark: #004c99;
+      --table-header: #0073e6;
+      --success: #2e7d32;
+      --success-bg: #edf7ed;
+      --danger: #c62828;
+      --danger-bg: #fdeded;
+      --warning: #f9a825;
+      --warning-bg: #fff8e1;
+      --border: #d0d7de;
+      --bg-gray: #f5f7f9;
+      --text: #1f2328;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-gray);
+      color: var(--text);
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+
+    /* Top Proctoring Header */
+    .top-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .top-title {
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+    }
+
+    .badge-info {
+      background: #1976d2;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .badge-submitted {
+      background: #e0e0e0;
+      color: #444;
+      padding: 3px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .score-summary {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0055a5;
+    }
+
+    .score-summary span {
+      font-size: 13px;
+      font-weight: 400;
+      color: #666;
+    }
+
+    /* Pack & Question Navigation */
+    .control-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pack-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pack-tab {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13.5px;
+      color: #444;
+      transition: all 0.15s;
+    }
+
+    .pack-tab:hover {
+      background: #f0f6ff;
+      border-color: var(--primary);
+    }
+
+    .pack-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-outline:hover {
+      background: #f3f4f6;
+    }
+
+    /* Question Number Pills */
+    .q-nav-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .q-pill {
+      width: 34px;
+      height: 30px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .q-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .q-pill.active {
+      background: #1f2328;
+      color: #fff;
+      border-color: #1f2328;
+    }
+
+    .q-pill.status-correct {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .q-pill.status-partial {
+      background: var(--warning-bg);
+      border-color: var(--warning);
+      color: #b26a00;
+    }
+
+    .q-pill.status-wrong {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* Main Content Container */
+    .main-container {
+      max-width: 1120px;
+      margin: 24px auto;
+      padding: 0 16px 60px;
+    }
+
+    .question-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 28px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    @media (max-width: 768px) {
+      .question-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Sidebar of Question */
+    .q-sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .q-number-box {
+      width: 84px;
+      height: 84px;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      font-weight: 400;
+      color: #111;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+
+    .q-points-text {
+      font-size: 13px;
+      color: #0055a5;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .q-points-text small {
+      display: block;
+      color: #666;
+      font-weight: 400;
+      font-size: 11.5px;
+    }
+
+    .scored-pill {
+      padding: 4px 16px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      background: #6c757d;
+      display: inline-block;
+    }
+
+    .scored-pill.full {
+      background: #2e7d32;
+    }
+
+    .scored-pill.partial {
+      background: #fbc02d;
+      color: #111;
+    }
+
+    .scored-pill.zero {
+      background: #c62828;
+    }
+
+    /* Question Body */
+    .q-body {
+      min-width: 0;
+    }
+
+    .q-intro {
+      margin-bottom: 16px;
+      white-space: pre-line;
+      color: #222;
+    }
+
+    .q-instructions {
+      color: #0033cc;
+      font-weight: 500;
+      margin: 14px 0;
+      white-space: pre-line;
+    }
+
+    .q-instructions strong {
+      font-weight: 700;
+    }
+
+    /* McGraw-Hill Style Blue Tables */
+    .econ-table-wrap {
+      margin: 14px 0 18px;
+      overflow-x: auto;
+    }
+
+    .econ-table-title {
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 700;
+      font-size: 13.5px;
+      margin-bottom: 4px;
+      color: #111;
+    }
+
+    table.econ-table {
+      border-collapse: collapse;
+      border: 2px solid #000;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13.5px;
+      min-width: 420px;
+    }
+
+    table.econ-table th {
+      background-color: var(--table-header);
+      color: #fff;
+      font-weight: 700;
+      padding: 6px 14px;
+      border: 1px solid #000;
+      text-align: center;
+    }
+
+    table.econ-table td {
+      padding: 5px 14px;
+      border: 1px solid #000;
+      text-align: center;
+      background: #fff;
+      color: #111;
+      font-weight: 600;
+    }
+
+    table.econ-table tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    /* Inputs & Selects */
+    .num-input {
+      width: 86px;
+      padding: 4px 8px;
+      border: 1px solid #555;
+      border-radius: 2px;
+      font-size: 13.5px;
+      text-align: right;
+      font-family: inherit;
+    }
+
+    .num-input.input-correct {
+      border: 2px solid var(--success);
+      background-color: var(--success-bg);
+    }
+
+    .num-input.input-wrong {
+      border: 2px solid var(--danger);
+      background-color: var(--danger-bg);
+    }
+
+    .select-input {
+      padding: 4px 8px;
+      border: 1px solid #555;
+      border-radius: 3px;
+      font-size: 13.5px;
+      background: #fff;
+    }
+
+    .select-input.input-correct {
+      border: 2px solid var(--success);
+      background-color: var(--success-bg);
+    }
+
+    .select-input.input-wrong {
+      border: 2px solid var(--danger);
+      background-color: var(--danger-bg);
+    }
+
+    /* Status Icons */
+    .feedback-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 11px;
+      color: #fff;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: bold;
+    }
+
+    .feedback-icon.ok {
+      background: var(--success);
+    }
+
+    .feedback-icon.err {
+      background: var(--danger);
+    }
+
+    .correct-hint {
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 700;
+      margin-left: 6px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* Parts Styling */
+    .q-part {
+      margin: 16px 0;
+    }
+
+    .q-part-prompt {
+      margin-bottom: 8px;
+      white-space: pre-line;
+      color: #1f2328;
+    }
+
+    .mcq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .mcq-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid #e1e4e8;
+      border-radius: 5px;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .mcq-option:hover {
+      background: #f8fafc;
+    }
+
+    .mcq-option.opt-correct {
+      border: 2px solid var(--success);
+      background: var(--success-bg);
+    }
+
+    .mcq-option.opt-wrong {
+      border: 2px solid var(--danger);
+      background: var(--danger-bg);
+    }
+
+    /* Interactive Graph Tool (Questions 11 & 12) */
+    .graph-widget {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      max-width: 720px;
+      margin: 14px 0 18px;
+      overflow: hidden;
+    }
+
+    .graph-widget-top {
+      padding: 8px 14px;
+      border-bottom: 1px solid #e0e0e0;
+      background: #fafafa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .graph-summary-btn {
+      padding: 5px 12px;
+      border: 1px solid #0055a5;
+      color: #0055a5;
+      background: #fff;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .graph-widget-body {
+      display: grid;
+      grid-template-columns: 205px 1fr;
+    }
+
+    @media (max-width: 640px) {
+      .graph-widget-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .graph-tools-panel {
+      border-right: 1px solid #e0e0e0;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fcfcfc;
+    }
+
+    .tools-heading {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .poly-tool-btn {
+      width: 100%;
+      padding: 10px;
+      border: 1.5px solid #0066cc;
+      background: #f0f7ff;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #111;
+      position: relative;
+      text-align: left;
+    }
+
+    .poly-tool-btn.tool-correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .poly-tool-btn.tool-wrong {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .tool-badge {
+      position: absolute;
+      top: -10px;
+      right: 8px;
+      background: var(--success);
+      color: #fff;
+      font-size: 10.5px;
+      padding: 1px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .tool-badge.err {
+      background: var(--danger);
+    }
+
+    .tool-status-text {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .reset-poly-btn {
+      margin-top: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .reset-poly-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .graph-legend {
+      margin-top: 24px;
+      font-size: 12.5px;
+      color: #333;
+    }
+
+    .graph-legend h4 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 7px;
+      border-radius: 4px;
+      background: #2b5c7e;
+    }
+
+    .legend-dot.eq {
+      background: #000;
+    }
+
+    .graph-canvas-panel {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Explanation Box */
+    .q-footer-actions {
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px dashed #e1e4e8;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .explanation-box {
+      margin-top: 18px;
+      padding: 16px 20px;
+      background: #f4f8fb;
+      border-left: 4px solid #0066cc;
+      border-radius: 4px;
+      color: #1f2328;
+      white-space: pre-line;
+      font-size: 14px;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      color: #0055a5;
+      margin-bottom: 6px;
+      font-size: 14.5px;
+    }
+
+    .inline-cloze-block {
+      background: #fafbfc;
+      padding: 12px 16px;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      margin-top: 8px;
+      line-height: 2.1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Proctoring Header -->
+  <header class="top-bar">
+    <div class="top-title">
+      <span>Proctoring Enabled: Managerial Economics Midterm Simulator</span>
+      <span class="badge-info" title="Interactive Practice Exam">i</span>
+    </div>
+    <div>
+      <span class="badge-submitted" id="packBadgeLabel">In Progress</span>
+    </div>
+    <div class="score-summary">
+      <strong id="packScoreDisplay">0.00/180</strong> <span>Total points awarded (Current Pack)</span>
+    </div>
+  </header>
+
+  <!-- Pack Switcher & Action Bar -->
+  <div class="control-bar">
+    <div class="pack-tabs" id="packTabsContainer"></div>
+
+    <div class="action-buttons">
+      <button class="btn btn-outline" onclick="toggleViewMode()" id="btnViewMode">
+        View: Single Question
+      </button>
+      <button class="btn btn-primary" onclick="gradeCurrentPack()">
+        Submit &amp; Grade Pack
+      </button>
+      <button class="btn btn-outline" onclick="showAllAnswersInPack()">
+        Show Correct Answers
+      </button>
+      <button class="btn btn-outline" onclick="resetCurrentPack()">
+        Reset Pack
+      </button>
+    </div>
+  </div>
+
+  <!-- Question Number Navigation Pills -->
+  <nav class="q-nav-bar" id="qNavBar"></nav>
+
+  <!-- Main Content -->
+  <main class="main-container" id="mainContainer"></main>
+
+  <!-- Load Question Packs (questions_pack1.js is optional/gitignored for copyright safety) -->
+  <script src="questions_pack1.js" onerror="console.info('Local Pack 1 not found (gitignored on public repo); loading Packs 2-6.')"></script>
+  <script src="questions_pack2.js"></script>
+  <script src="questions_pack3.js"></script>
+  <script src="questions_pack4.js"></script>
+  <script src="questions_pack5.js"></script>
+  <script src="questions_pack6.js"></script>
+
+  <script>
+    const PACK_CATALOG = [];
+    if (typeof PACK1 !== 'undefined') {
+      PACK_CATALOG.push({ title: 'Pack 1: Original Midterm (Local Only)', data: PACK1 });
+    }
+    if (typeof PACK2 !== 'undefined') {
+      PACK_CATALOG.push({ title: 'Pack 2: Practice Set A (Standard)', data: PACK2 });
+    }
+    if (typeof PACK3 !== 'undefined') {
+      PACK_CATALOG.push({ title: 'Pack 3: Practice Set B (Challenge)', data: PACK3 });
+    }
+    if (typeof PACK4 !== 'undefined') {
+      PACK_CATALOG.push({ title: 'Pack 4: Practice Set C (PS & ES Graph)', data: PACK4 });
+    }
+    if (typeof PACK5 !== 'undefined') {
+      PACK_CATALOG.push({ title: 'Pack 5: Practice Set D (CS & PS Graph)', data: PACK5 });
+    }
+    if (typeof PACK6 !== 'undefined') {
+      PACK_CATALOG.push({ title: 'Pack 6: Practice Set E (Advanced PS & ES)', data: PACK6 });
+    }
+
+    const ALL_PACKS = PACK_CATALOG.map(p => p.data);
+    let currentPackIdx = 0;
+    let currentQIdx = 0;
+    let viewAllMode = false; // false = single question view (like exam), true = all 18 questions stacked
+
+    function renderPackTabs() {
+      const container = document.getElementById('packTabsContainer');
+      container.innerHTML = '';
+      PACK_CATALOG.forEach((p, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'pack-tab' + (idx === currentPackIdx ? ' active' : '');
+        btn.id = `tabPack${idx}`;
+        btn.textContent = p.title;
+        btn.onclick = () => switchPack(idx);
+        container.appendChild(btn);
+      });
+    }
+
+    // Store user responses, polygon vertices, and graded status per question ID
+    const userState = {};
+
+    function getQState(qId) {
+      if (!userState[qId]) {
+        userState[qId] = {
+          inputs: {},       // key -> value
+          checkboxes: {},   // partId -> Set of indices
+          triangle: [],     // array of {x, y} vertices (max 3)
+          graded: false,
+          showAnswer: false,
+          score: 0
+        };
+      }
+      return userState[qId];
+    }
+
+    function switchPack(packIdx) {
+      currentPackIdx = packIdx;
+      currentQIdx = 0;
+      document.querySelectorAll('.pack-tab').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === packIdx);
+      });
+      renderAll();
+    }
+
+    function toggleViewMode() {
+      viewAllMode = !viewAllMode;
+      document.getElementById('btnViewMode').textContent =
+        viewAllMode ? 'View: All 18 Questions' : 'View: Single Question';
+      renderAll();
+    }
+
+    function goToQuestion(qIdx) {
+      currentQIdx = qIdx;
+      renderAll();
+      if (viewAllMode) {
+        const el = document.getElementById(`qcard_${ALL_PACKS[currentPackIdx][qIdx].id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Grading logic for a single question
+    function evaluateQuestion(q) {
+      const st = getQState(q.id);
+      let totalItems = 0;
+      let correctItems = 0;
+
+      // 1. Check table inputs if any
+      if (q.table && q.table.rows) {
+        q.table.rows.forEach(row => {
+          row.forEach(cell => {
+            if (cell && typeof cell === 'object' && cell.inputId) {
+              totalItems++;
+              const raw = (st.inputs[cell.inputId] ?? '').toString().replace(/,/g, '').trim();
+              const num = Number(raw);
+              if (raw !== '' && !isNaN(num) && Math.abs(num - cell.answer) < 0.01) {
+                correctItems++;
+              }
+            }
+          });
+        });
+      }
+
+      // 2. Check interactive graph triangle if type === 'interactive_graph'
+      if (q.type === 'interactive_graph' && q.graphConfig) {
+        totalItems++;
+        if (isTriangleCorrect(st.triangle, q.graphConfig.targetTriangle)) {
+          correctItems++;
+        }
+      }
+
+      // 3. Check parts
+      if (q.parts) {
+        q.parts.forEach(part => {
+          if (part.type === 'number') {
+            totalItems++;
+            const raw = (st.inputs[part.id] ?? '').toString().replace(/,/g, '').trim();
+            const num = Number(raw);
+            if (raw !== '' && !isNaN(num) && Math.abs(num - part.answer) < 0.01) {
+              correctItems++;
+            }
+          } else if (part.type === 'mcq') {
+            totalItems++;
+            const sel = st.inputs[part.id];
+            if (sel !== undefined && Number(sel) === part.answer) {
+              correctItems++;
+            }
+          } else if (part.type === 'select') {
+            totalItems++;
+            const sel = st.inputs[part.id];
+            if (sel === part.answer) {
+              correctItems++;
+            }
+          } else if (part.type === 'checkbox') {
+            const chosen = st.checkboxes[part.id] || new Set();
+            part.options.forEach((_, idx) => {
+              totalItems++;
+              const shouldBeChecked = part.answers.includes(idx);
+              const isChecked = chosen.has(idx);
+              if (shouldBeChecked === isChecked) {
+                correctItems++;
+              }
+            });
+          } else if (part.type === 'inline_Cloze') {
+            part.segments.forEach(seg => {
+              if (typeof seg === 'object' && seg.id) {
+                totalItems++;
+                if (st.inputs[seg.id] === seg.answer) {
+                  correctItems++;
+                }
+              }
+            });
+          }
+        });
+      }
+
+      const ratio = totalItems > 0 ? correctItems / totalItems : 0;
+      st.score = Math.round(ratio * q.points * 100) / 100;
+      return { totalItems, correctItems, score: st.score };
+    }
+
+    function isTriangleCorrect(userPts, targetPts) {
+      if (!userPts || userPts.length !== 3) return false;
+      const used = [false, false, false];
+      for (const u of userPts) {
+        let found = false;
+        for (let i = 0; i < 3; i++) {
+          if (!used[i] && Math.abs(u.x - targetPts[i].x) < 1e-3 && Math.abs(u.y - targetPts[i].y) < 1e-3) {
+            used[i] = true;
+            found = true;
+            break;
+          }
+        }
+        if (!found) return false;
+      }
+      return true;
+    }
+
+    function gradeSingleQuestion(qId) {
+      const pack = ALL_PACKS[currentPackIdx];
+      const q = pack.find(item => item.id === qId);
+      if (!q) return;
+      const st = getQState(qId);
+      st.graded = true;
+      evaluateQuestion(q);
+      renderAll();
+    }
+
+    function toggleShowAnswerSingle(qId) {
+      const pack = ALL_PACKS[currentPackIdx];
+      const q = pack.find(item => item.id === qId);
+      if (!q) return;
+      const st = getQState(qId);
+      st.graded = true;
+      st.showAnswer = !st.showAnswer;
+      evaluateQuestion(q);
+      renderAll();
+    }
+
+    function gradeCurrentPack() {
+      const pack = ALL_PACKS[currentPackIdx];
+      pack.forEach(q => {
+        const st = getQState(q.id);
+        st.graded = true;
+        evaluateQuestion(q);
+      });
+      renderAll();
+    }
+
+    function showAllAnswersInPack() {
+      const pack = ALL_PACKS[currentPackIdx];
+      pack.forEach(q => {
+        const st = getQState(q.id);
+        st.graded = true;
+        st.showAnswer = true;
+        evaluateQuestion(q);
+      });
+      renderAll();
+    }
+
+    function resetCurrentPack() {
+      const pack = ALL_PACKS[currentPackIdx];
+      pack.forEach(q => {
+        delete userState[q.id];
+      });
+      renderAll();
+    }
+
+    function updateHeaderScore() {
+      const pack = ALL_PACKS[currentPackIdx];
+      let sum = 0;
+      let anyGraded = false;
+      pack.forEach(q => {
+        const st = getQState(q.id);
+        if (st.graded) {
+          anyGraded = true;
+          sum += st.score;
+        }
+      });
+      document.getElementById('packScoreDisplay').textContent = `${sum.toFixed(2)}/180`;
+      const badge = document.getElementById('packBadgeLabel');
+      badge.textContent = anyGraded ? 'Submitted & Scored' : 'In Progress';
+      badge.style.background = anyGraded ? '#d1e7dd' : '#e0e0e0';
+      badge.style.color = anyGraded ? '#0f5132' : '#444';
+    }
+
+    function renderNavPills() {
+      const nav = document.getElementById('qNavBar');
+      nav.innerHTML = '';
+      const pack = ALL_PACKS[currentPackIdx];
+
+      pack.forEach((q, idx) => {
+        const st = getQState(q.id);
+        const btn = document.createElement('button');
+        btn.className = 'q-pill';
+        if (idx === currentQIdx && !viewAllMode) btn.classList.add('active');
+        if (st.graded) {
+          if (st.score >= q.points - 0.01) btn.classList.add('status-correct');
+          else if (st.score > 0) btn.classList.add('status-partial');
+          else btn.classList.add('status-wrong');
+        }
+        btn.textContent = q.number;
+        btn.onclick = () => goToQuestion(idx);
+        nav.appendChild(btn);
+      });
+    }
+
+    function renderAll() {
+      renderPackTabs();
+      updateHeaderScore();
+      renderNavPills();
+
+      const container = document.getElementById('mainContainer');
+      container.innerHTML = '';
+      const pack = ALL_PACKS[currentPackIdx];
+
+      const questionsToRender = viewAllMode ? pack : [pack[currentQIdx]];
+
+      questionsToRender.forEach(q => {
+        container.appendChild(renderQuestionCard(q));
+      });
+    }
+
+    function renderQuestionCard(q) {
+      const st = getQState(q.id);
+      if (st.graded) evaluateQuestion(q);
+
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.id = `qcard_${q.id}`;
+
+      // Left Sidebar
+      const sidebar = document.createElement('div');
+      sidebar.className = 'q-sidebar';
+
+      const numBox = document.createElement('div');
+      numBox.className = 'q-number-box';
+      numBox.textContent = q.number;
+      sidebar.appendChild(numBox);
+
+      const ptsText = document.createElement('div');
+      ptsText.className = 'q-points-text';
+      if (st.graded) {
+        ptsText.innerHTML = `${st.score.toFixed(2).replace(/\.00$/, '')}/${q.points}<small>points awarded</small>`;
+      } else {
+        ptsText.innerHTML = `${q.points}<small>points possible</small>`;
+      }
+      sidebar.appendChild(ptsText);
+
+      const pill = document.createElement('span');
+      pill.className = 'scored-pill';
+      if (st.graded) {
+        pill.textContent = 'Scored';
+        if (st.score >= q.points - 0.01) pill.classList.add('full');
+        else if (st.score > 0) pill.classList.add('partial');
+        else pill.classList.add('zero');
+      } else {
+        pill.textContent = 'Unscored';
+      }
+      sidebar.appendChild(pill);
+
+      card.appendChild(sidebar);
+
+      // Right Body
+      const body = document.createElement('div');
+      body.className = 'q-body';
+
+      if (q.intro) {
+        const introEl = document.createElement('div');
+        introEl.className = 'q-intro';
+        introEl.textContent = q.intro;
+        body.appendChild(introEl);
+      }
+
+      // Render static SVG Graph if present (Q2, Q8)
+      if (q.svgGraph) {
+        body.appendChild(renderStaticSvgGraph(q.svgGraph));
+      }
+
+      // Render Interactive Graph if present (Q11, Q12)
+      if (q.type === 'interactive_graph' && q.graphConfig) {
+        body.appendChild(renderInteractiveGraph(q, st));
+      }
+
+      if (q.story) {
+        const storyEl = document.createElement('div');
+        storyEl.className = 'q-intro';
+        storyEl.textContent = q.story;
+        body.appendChild(storyEl);
+      }
+
+      // Render Table if present
+      if (q.table) {
+        body.appendChild(renderTable(q, st));
+      }
+
+      // Render Instructions if present
+      if (q.instructions) {
+        const instEl = document.createElement('div');
+        instEl.className = 'q-instructions';
+        instEl.textContent = q.instructions;
+        body.appendChild(instEl);
+      }
+
+      // Render Parts
+      if (q.parts && q.parts.length > 0) {
+        q.parts.forEach(part => {
+          body.appendChild(renderPart(q, part, st));
+        });
+      }
+
+      // Footer Buttons for this question
+      const footer = document.createElement('div');
+      footer.className = 'q-footer-actions';
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'btn btn-primary';
+      checkBtn.textContent = st.graded ? 'Re-Check Answer' : 'Check Answer';
+      checkBtn.onclick = () => gradeSingleQuestion(q.id);
+      footer.appendChild(checkBtn);
+
+      const showAnsBtn = document.createElement('button');
+      showAnsBtn.className = 'btn btn-outline';
+      showAnsBtn.textContent = st.showAnswer ? 'Hide Correct Answers' : 'Show Correct Answers & Explanation';
+      showAnsBtn.onclick = () => toggleShowAnswerSingle(q.id);
+      footer.appendChild(showAnsBtn);
+
+      if (!viewAllMode) {
+        const pack = ALL_PACKS[currentPackIdx];
+        if (currentQIdx > 0) {
+          const prevBtn = document.createElement('button');
+          prevBtn.className = 'btn btn-outline';
+          prevBtn.textContent = '← Previous';
+          prevBtn.onclick = () => goToQuestion(currentQIdx - 1);
+          footer.appendChild(prevBtn);
+        }
+        if (currentQIdx < pack.length - 1) {
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'btn btn-outline';
+          nextBtn.textContent = 'Next Question →';
+          nextBtn.onclick = () => goToQuestion(currentQIdx + 1);
+          footer.appendChild(nextBtn);
+        }
+      }
+
+      body.appendChild(footer);
+
+      // Explanation Box (shown automatically once graded)
+      if (st.graded && q.explanation) {
+        const expBox = document.createElement('div');
+        expBox.className = 'explanation-box';
+        expBox.innerHTML = `<div class="explanation-title">Explanation</div>${escapeHtml(q.explanation)}`;
+        body.appendChild(expBox);
+      }
+
+      card.appendChild(body);
+      return card;
+    }
+
+    function renderTable(q, st) {
+      const wrap = document.createElement('div');
+      wrap.className = 'econ-table-wrap';
+
+      if (q.table.title) {
+        const title = document.createElement('div');
+        title.className = 'econ-table-title';
+        title.textContent = q.table.title;
+        wrap.appendChild(title);
+      }
+
+      const tbl = document.createElement('table');
+      tbl.className = 'econ-table';
+
+      const thead = document.createElement('thead');
+      q.table.headers.forEach(hRow => {
+        const tr = document.createElement('tr');
+        hRow.forEach(hCell => {
+          const th = document.createElement('th');
+          th.textContent = hCell.text;
+          if (hCell.colspan) th.colSpan = hCell.colspan;
+          if (hCell.rowspan) th.rowSpan = hCell.rowspan;
+          tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+      });
+      tbl.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      q.table.rows.forEach(rData => {
+        const tr = document.createElement('tr');
+        rData.forEach(cell => {
+          const td = document.createElement('td');
+          if (cell && typeof cell === 'object' && cell.inputId) {
+            if (cell.prefix) {
+              const pre = document.createElement('span');
+              pre.textContent = cell.prefix + ' ';
+              td.appendChild(pre);
+            }
+            const inp = document.createElement('input');
+            inp.type = 'text';
+            inp.className = 'num-input';
+            inp.value = st.inputs[cell.inputId] ?? '';
+            inp.oninput = (e) => {
+              st.inputs[cell.inputId] = e.target.value;
+            };
+
+            if (st.graded) {
+              const raw = (st.inputs[cell.inputId] ?? '').toString().replace(/,/g, '').trim();
+              const num = Number(raw);
+              const isOk = raw !== '' && !isNaN(num) && Math.abs(num - cell.answer) < 0.01;
+              inp.classList.add(isOk ? 'input-correct' : 'input-wrong');
+              td.appendChild(inp);
+
+              const icon = document.createElement('span');
+              icon.className = `feedback-icon ${isOk ? 'ok' : 'err'}`;
+              icon.textContent = isOk ? '✓' : '✕';
+              td.appendChild(icon);
+
+              if (!isOk && st.showAnswer) {
+                const hint = document.createElement('span');
+                hint.className = 'correct-hint';
+                hint.textContent = `(${cell.answer.toLocaleString()})`;
+                td.appendChild(hint);
+              }
+            } else {
+              td.appendChild(inp);
+            }
+          } else {
+            td.textContent = cell;
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      tbl.appendChild(tbody);
+      wrap.appendChild(tbl);
+      return wrap;
+    }
+
+    function renderPart(q, part, st) {
+      const wrap = document.createElement('div');
+      wrap.className = 'q-part';
+
+      if (part.prompt) {
+        const pr = document.createElement('div');
+        pr.className = 'q-part-prompt';
+        pr.textContent = part.prompt;
+        wrap.appendChild(pr);
+      }
+
+      if (part.type === 'number') {
+        const line = document.createElement('div');
+        if (part.prefix) {
+          const pre = document.createElement('span');
+          pre.textContent = part.prefix + ' ';
+          pre.style.fontWeight = '600';
+          line.appendChild(pre);
+        }
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'num-input';
+        inp.value = st.inputs[part.id] ?? '';
+        inp.oninput = (e) => {
+          st.inputs[part.id] = e.target.value;
+        };
+
+        if (st.graded) {
+          const raw = (st.inputs[part.id] ?? '').toString().replace(/,/g, '').trim();
+          const num = Number(raw);
+          const isOk = raw !== '' && !isNaN(num) && Math.abs(num - part.answer) < 0.01;
+          inp.classList.add(isOk ? 'input-correct' : 'input-wrong');
+          line.appendChild(inp);
+
+          if (part.suffix) {
+            const suf = document.createElement('span');
+            suf.textContent = ' ' + part.suffix;
+            line.appendChild(suf);
+          }
+
+          const icon = document.createElement('span');
+          icon.className = `feedback-icon ${isOk ? 'ok' : 'err'}`;
+          icon.textContent = isOk ? '✓' : '✕';
+          line.appendChild(icon);
+
+          if (!isOk && st.showAnswer) {
+            const hint = document.createElement('span');
+            hint.className = 'correct-hint';
+            hint.textContent = `Correct: ${part.answer.toLocaleString()}`;
+            line.appendChild(hint);
+          }
+        } else {
+          line.appendChild(inp);
+          if (part.suffix) {
+            const suf = document.createElement('span');
+            suf.textContent = ' ' + part.suffix;
+            line.appendChild(suf);
+          }
+        }
+        wrap.appendChild(line);
+      } else if (part.type === 'select') {
+        const line = document.createElement('div');
+        const sel = document.createElement('select');
+        sel.className = 'select-input';
+
+        const emptyOpt = document.createElement('option');
+        emptyOpt.value = '';
+        emptyOpt.textContent = '-- select --';
+        sel.appendChild(emptyOpt);
+
+        part.options.forEach(optVal => {
+          const opt = document.createElement('option');
+          opt.value = optVal;
+          opt.textContent = optVal;
+          if (st.inputs[part.id] === optVal) opt.selected = true;
+          sel.appendChild(opt);
+        });
+
+        sel.onchange = (e) => {
+          st.inputs[part.id] = e.target.value;
+        };
+
+        if (st.graded) {
+          const isOk = st.inputs[part.id] === part.answer;
+          sel.classList.add(isOk ? 'input-correct' : 'input-wrong');
+          line.appendChild(sel);
+
+          const icon = document.createElement('span');
+          icon.className = `feedback-icon ${isOk ? 'ok' : 'err'}`;
+          icon.textContent = isOk ? '✓' : '✕';
+          line.appendChild(icon);
+
+          if (!isOk && st.showAnswer) {
+            const hint = document.createElement('span');
+            hint.className = 'correct-hint';
+            hint.textContent = `Correct: ${part.answer}`;
+            line.appendChild(hint);
+          }
+        } else {
+          line.appendChild(sel);
+        }
+        wrap.appendChild(line);
+      } else if (part.type === 'mcq') {
+        const list = document.createElement('div');
+        list.className = 'mcq-list';
+
+        part.options.forEach((optText, idx) => {
+          const lbl = document.createElement('label');
+          lbl.className = 'mcq-option';
+
+          const rad = document.createElement('input');
+          rad.type = 'radio';
+          rad.name = `${q.id}_${part.id}`;
+          rad.checked = st.inputs[part.id] !== undefined && Number(st.inputs[part.id]) === idx;
+          rad.onchange = () => {
+            st.inputs[part.id] = idx;
+          };
+
+          lbl.appendChild(rad);
+          const span = document.createElement('span');
+          span.textContent = optText;
+          lbl.appendChild(span);
+
+          if (st.graded) {
+            const isSelected = st.inputs[part.id] !== undefined && Number(st.inputs[part.id]) === idx;
+            const isCorrectOpt = idx === part.answer;
+
+            if (isSelected && isCorrectOpt) {
+              lbl.classList.add('opt-correct');
+              const icon = document.createElement('span');
+              icon.className = 'feedback-icon ok';
+              icon.textContent = '✓';
+              lbl.appendChild(icon);
+            } else if (isSelected && !isCorrectOpt) {
+              lbl.classList.add('opt-wrong');
+              const icon = document.createElement('span');
+              icon.className = 'feedback-icon err';
+              icon.textContent = '✕';
+              lbl.appendChild(icon);
+            } else if (!isSelected && isCorrectOpt && st.showAnswer) {
+              lbl.classList.add('opt-correct');
+              const hint = document.createElement('span');
+              hint.className = 'correct-hint';
+              hint.textContent = '← Correct Answer';
+              lbl.appendChild(hint);
+            }
+          }
+
+          list.appendChild(lbl);
+        });
+        wrap.appendChild(list);
+      } else if (part.type === 'checkbox') {
+        if (!st.checkboxes[part.id]) st.checkboxes[part.id] = new Set();
+        const chosen = st.checkboxes[part.id];
+
+        const list = document.createElement('div');
+        list.className = 'mcq-list';
+
+        part.options.forEach((optText, idx) => {
+          const lbl = document.createElement('label');
+          lbl.className = 'mcq-option';
+
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = chosen.has(idx);
+          cb.onchange = (e) => {
+            if (e.target.checked) chosen.add(idx);
+            else chosen.delete(idx);
+          };
+
+          lbl.appendChild(cb);
+          const span = document.createElement('span');
+          span.textContent = optText;
+          lbl.appendChild(span);
+
+          if (st.graded) {
+            const shouldCheck = part.answers.includes(idx);
+            const isChecked = chosen.has(idx);
+            const match = shouldCheck === isChecked;
+
+            if (isChecked) {
+              lbl.classList.add(match ? 'opt-correct' : 'opt-wrong');
+            }
+            const icon = document.createElement('span');
+            icon.className = `feedback-icon ${match ? 'ok' : 'err'}`;
+            icon.textContent = match ? '✓' : '✕';
+            lbl.appendChild(icon);
+
+            if (!match && st.showAnswer) {
+              const hint = document.createElement('span');
+              hint.className = 'correct-hint';
+              hint.textContent = shouldCheck ? '(Should be selected)' : '(Leave unselected)';
+              lbl.appendChild(hint);
+            }
+          }
+
+          list.appendChild(lbl);
+        });
+        wrap.appendChild(list);
+      } else if (part.type === 'inline_Cloze') {
+        const block = document.createElement('div');
+        block.className = 'inline-cloze-block';
+
+        part.segments.forEach(seg => {
+          if (typeof seg === 'string') {
+            const sp = document.createElement('span');
+            sp.textContent = seg;
+            block.appendChild(sp);
+          } else if (seg && typeof seg === 'object') {
+            const sel = document.createElement('select');
+            sel.className = 'select-input';
+
+            const emptyOpt = document.createElement('option');
+            emptyOpt.value = '';
+            emptyOpt.textContent = '-- select --';
+            sel.appendChild(emptyOpt);
+
+            seg.options.forEach(optVal => {
+              const opt = document.createElement('option');
+              opt.value = optVal;
+              opt.textContent = optVal;
+              if (st.inputs[seg.id] === optVal) opt.selected = true;
+              sel.appendChild(opt);
+            });
+
+            sel.onchange = (e) => {
+              st.inputs[seg.id] = e.target.value;
+            };
+
+            block.appendChild(sel);
+
+            if (st.graded) {
+              const isOk = st.inputs[seg.id] === seg.answer;
+              sel.classList.add(isOk ? 'input-correct' : 'input-wrong');
+
+              const icon = document.createElement('span');
+              icon.className = `feedback-icon ${isOk ? 'ok' : 'err'}`;
+              icon.textContent = isOk ? '✓' : '✕';
+              icon.style.marginRight = '4px';
+              block.appendChild(icon);
+
+              if (!isOk && st.showAnswer) {
+                const hint = document.createElement('span');
+                hint.className = 'correct-hint';
+                hint.textContent = `[${seg.answer}] `;
+                block.appendChild(hint);
+              }
+            }
+          }
+        });
+        wrap.appendChild(block);
+      }
+
+      return wrap;
+    }
+
+    // Static SVG Graph Renderer for Q2 (MB/MC) and Q8 (PPF)
+    function renderStaticSvgGraph(cfg) {
+      const wrap = document.createElement('div');
+      wrap.style.margin = '12px 0 18px';
+
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('width', '460');
+      svg.setAttribute('height', '310');
+      svg.setAttribute('viewBox', '0 0 460 310');
+      svg.style.background = '#fff';
+      svg.style.maxWidth = '100%';
+
+      if (cfg.type === 'mb_mc') {
+        // Axes: origin at (75, 250), X-axis to 380, Y-axis to 30
+        const ox = 75, oy = 250, xEnd = 380, yTop = 30;
+        const xMin = cfg.xTicks[0] - 8;
+        const xMax = cfg.xTicks[cfg.xTicks.length - 1] + 4;
+        const yVals = cfg.yTicks.map(Number);
+        const yMin = 0;
+        const yMax = yVals[yVals.length - 1] * 1.18;
+
+        const toX = (x) => ox + ((x - xMin) / (xMax - xMin)) * (xEnd - ox);
+        const toY = (y) => oy - ((y - yMin) / (yMax - yMin)) * (oy - yTop);
+
+        // Dashed guide lines
+        cfg.dashedPoints.forEach(pt => {
+          const px = toX(pt.x), py = toY(pt.y);
+          const vLine = document.createElementNS(svgNS, 'line');
+          vLine.setAttribute('x1', px); vLine.setAttribute('y1', py);
+          vLine.setAttribute('x2', px); vLine.setAttribute('y2', oy);
+          vLine.setAttribute('stroke', '#111');
+          vLine.setAttribute('stroke-width', '1.8');
+          vLine.setAttribute('stroke-dasharray', '5,4');
+          svg.appendChild(vLine);
+
+          const hLine = document.createElementNS(svgNS, 'line');
+          hLine.setAttribute('x1', ox); hLine.setAttribute('y1', py);
+          hLine.setAttribute('x2', px); hLine.setAttribute('y2', py);
+          hLine.setAttribute('stroke', '#111');
+          hLine.setAttribute('stroke-width', '1.8');
+          hLine.setAttribute('stroke-dasharray', '5,4');
+          svg.appendChild(hLine);
+        });
+
+        // MB Line (blue)
+        const mb = cfg.mbLine;
+        const mbLine = document.createElementNS(svgNS, 'line');
+        mbLine.setAttribute('x1', toX(mb.x1) - 10);
+        mbLine.setAttribute('y1', toY(mb.y1) - 6);
+        mbLine.setAttribute('x2', toX(mb.x2) + 12);
+        mbLine.setAttribute('y2', toY(mb.y2) + 7);
+        mbLine.setAttribute('stroke', '#1a5fb4');
+        mbLine.setAttribute('stroke-width', '2.5');
+        svg.appendChild(mbLine);
+
+        const mbLbl = document.createElementNS(svgNS, 'text');
+        mbLbl.setAttribute('x', toX(mb.x2) + 18);
+        mbLbl.setAttribute('y', toY(mb.y2) + 10);
+        mbLbl.setAttribute('font-size', '13');
+        mbLbl.setAttribute('font-weight', '600');
+        mbLbl.textContent = 'MB';
+        svg.appendChild(mbLbl);
+
+        // MC Line (red)
+        const mc = cfg.mcLine;
+        const mcLine = document.createElementNS(svgNS, 'line');
+        mcLine.setAttribute('x1', toX(mc.x1) - 8);
+        mcLine.setAttribute('y1', toY(mc.y1) + 20);
+        mcLine.setAttribute('x2', toX(mc.x2) + 8);
+        mcLine.setAttribute('y2', toY(mc.y2) - 20);
+        mcLine.setAttribute('stroke', '#e01b24');
+        mcLine.setAttribute('stroke-width', '2.5');
+        svg.appendChild(mcLine);
+
+        const mcLbl = document.createElementNS(svgNS, 'text');
+        mcLbl.setAttribute('x', toX(mc.x2) + 12);
+        mcLbl.setAttribute('y', toY(mc.y2) - 18);
+        mcLbl.setAttribute('font-size', '13');
+        mcLbl.setAttribute('font-weight', '600');
+        mcLbl.textContent = 'MC';
+        svg.appendChild(mcLbl);
+
+        // Dots
+        cfg.dashedPoints.forEach(pt => {
+          const c = document.createElementNS(svgNS, 'circle');
+          c.setAttribute('cx', toX(pt.x));
+          c.setAttribute('cy', toY(pt.y));
+          c.setAttribute('r', '4');
+          c.setAttribute('fill', '#111');
+          svg.appendChild(c);
+        });
+
+        // Axes lines
+        const xAxis = document.createElementNS(svgNS, 'line');
+        xAxis.setAttribute('x1', ox); xAxis.setAttribute('y1', oy);
+        xAxis.setAttribute('x2', xEnd); xAxis.setAttribute('y2', oy);
+        xAxis.setAttribute('stroke', '#111'); xAxis.setAttribute('stroke-width', '2');
+        svg.appendChild(xAxis);
+
+        const yAxis = document.createElementNS(svgNS, 'line');
+        yAxis.setAttribute('x1', ox); yAxis.setAttribute('y1', oy);
+        yAxis.setAttribute('x2', ox); yAxis.setAttribute('y2', yTop);
+        yAxis.setAttribute('stroke', '#111'); yAxis.setAttribute('stroke-width', '2');
+        svg.appendChild(yAxis);
+
+        // X Ticks
+        cfg.xTicks.forEach(xt => {
+          const tx = toX(xt);
+          const lbl = document.createElementNS(svgNS, 'text');
+          lbl.setAttribute('x', tx); lbl.setAttribute('y', oy + 18);
+          lbl.setAttribute('text-anchor', 'middle');
+          lbl.setAttribute('font-size', '12.5');
+          lbl.textContent = xt;
+          svg.appendChild(lbl);
+        });
+
+        // Y Ticks
+        cfg.yTicks.forEach(yt => {
+          const ty = toY(Number(yt));
+          const lbl = document.createElementNS(svgNS, 'text');
+          lbl.setAttribute('x', ox - 8); lbl.setAttribute('y', ty + 4);
+          lbl.setAttribute('text-anchor', 'end');
+          lbl.setAttribute('font-size', '12.5');
+          lbl.textContent = yt;
+          svg.appendChild(lbl);
+        });
+
+        // Origin 0
+        const zeroLbl = document.createElementNS(svgNS, 'text');
+        zeroLbl.setAttribute('x', ox - 8); zeroLbl.setAttribute('y', oy + 5);
+        zeroLbl.setAttribute('text-anchor', 'end');
+        zeroLbl.setAttribute('font-size', '12.5');
+        zeroLbl.textContent = '0';
+        svg.appendChild(zeroLbl);
+
+        // Axis titles
+        const xTitle = document.createElementNS(svgNS, 'text');
+        xTitle.setAttribute('x', (ox + xEnd) / 2); xTitle.setAttribute('y', oy + 42);
+        xTitle.setAttribute('text-anchor', 'middle');
+        xTitle.setAttribute('font-weight', '700');
+        xTitle.setAttribute('font-size', '13.5');
+        xTitle.textContent = cfg.xLabel;
+        svg.appendChild(xTitle);
+
+        const yTitle = document.createElementNS(svgNS, 'text');
+        yTitle.setAttribute('x', 20); yTitle.setAttribute('y', (oy + yTop) / 2);
+        yTitle.setAttribute('text-anchor', 'middle');
+        yTitle.setAttribute('font-weight', '700');
+        yTitle.setAttribute('font-size', '13.5');
+        yTitle.setAttribute('transform', `rotate(-90, 20, ${(oy + yTop) / 2})`);
+        yTitle.textContent = cfg.yLabel;
+        svg.appendChild(yTitle);
+
+      } else if (cfg.type === 'ppf') {
+        const ox = 80, oy = 250, xEnd = 390, yTop = 45;
+        // Title
+        const t = document.createElementNS(svgNS, 'text');
+        t.setAttribute('x', 240); t.setAttribute('y', 22);
+        t.setAttribute('text-anchor', 'middle');
+        t.setAttribute('font-weight', '700');
+        t.setAttribute('font-size', '14.5');
+        t.textContent = cfg.title;
+        svg.appendChild(t);
+
+        const topY = yTop + 20;
+        const rightX = ox + 110;
+        const midX = (ox + rightX) / 2;
+        const midY = (oy + topY) / 2;
+
+        // Dashed midpoint lines
+        const d1 = document.createElementNS(svgNS, 'line');
+        d1.setAttribute('x1', ox); d1.setAttribute('y1', midY);
+        d1.setAttribute('x2', midX); d1.setAttribute('y2', midY);
+        d1.setAttribute('stroke', '#111'); d1.setAttribute('stroke-width', '1.6');
+        d1.setAttribute('stroke-dasharray', '5,4');
+        svg.appendChild(d1);
+
+        const d2 = document.createElementNS(svgNS, 'line');
+        d2.setAttribute('x1', midX); d2.setAttribute('y1', midY);
+        d2.setAttribute('x2', midX); d2.setAttribute('y2', oy);
+        d2.setAttribute('stroke', '#111'); d2.setAttribute('stroke-width', '1.6');
+        d2.setAttribute('stroke-dasharray', '5,4');
+        svg.appendChild(d2);
+
+        // PPF Line
+        const ppf = document.createElementNS(svgNS, 'line');
+        ppf.setAttribute('x1', ox); ppf.setAttribute('y1', topY);
+        ppf.setAttribute('x2', rightX); ppf.setAttribute('y2', oy);
+        ppf.setAttribute('stroke', '#111'); ppf.setAttribute('stroke-width', '2.2');
+        svg.appendChild(ppf);
+
+        // Axes
+        const xAxis = document.createElementNS(svgNS, 'line');
+        xAxis.setAttribute('x1', ox); xAxis.setAttribute('y1', oy);
+        xAxis.setAttribute('x2', xEnd); xAxis.setAttribute('y2', oy);
+        xAxis.setAttribute('stroke', '#111'); xAxis.setAttribute('stroke-width', '2');
+        svg.appendChild(xAxis);
+
+        const yAxis = document.createElementNS(svgNS, 'line');
+        yAxis.setAttribute('x1', ox); yAxis.setAttribute('y1', oy);
+        yAxis.setAttribute('x2', ox); yAxis.setAttribute('y2', yTop);
+        yAxis.setAttribute('stroke', '#111'); yAxis.setAttribute('stroke-width', '2');
+        svg.appendChild(yAxis);
+
+        // Labels
+        const addTxt = (x, y, txt, anchor = 'middle', bold = true) => {
+          const el = document.createElementNS(svgNS, 'text');
+          el.setAttribute('x', x); el.setAttribute('y', y);
+          el.setAttribute('text-anchor', anchor);
+          el.setAttribute('font-size', '13.5');
+          if (bold) el.setAttribute('font-weight', '700');
+          el.textContent = txt;
+          svg.appendChild(el);
+        };
+
+        addTxt(ox - 10, topY + 5, cfg.yMax, 'end');
+        addTxt(ox - 10, midY + 5, cfg.midPoint.y, 'end');
+        addTxt(midX, oy + 20, cfg.midPoint.x, 'middle');
+        addTxt(rightX, oy + 20, cfg.xMax, 'middle');
+        addTxt(ox - 12, yTop - 4, cfg.yLabel, 'end');
+        addTxt(xEnd - 20, oy + 26, cfg.xLabel, 'end');
+      }
+
+      wrap.appendChild(svg);
+      return wrap;
+    }
+
+    // Interactive Graph Widget for Questions 11 & 12
+    function renderInteractiveGraph(q, st) {
+      const cfg = q.graphConfig;
+      const widget = document.createElement('div');
+      widget.className = 'graph-widget';
+
+      // Top bar
+      const topBar = document.createElement('div');
+      topBar.className = 'graph-widget-top';
+      topBar.innerHTML = `<button class="graph-summary-btn" type="button">Graph Summary</button><span style="font-size:12px;color:#555;">Click 3 points on the grid to plot the ${cfg.shortLabel} triangle</span>`;
+      widget.appendChild(topBar);
+
+      const body = document.createElement('div');
+      body.className = 'graph-widget-body';
+
+      // Left Tools Panel
+      const toolsPanel = document.createElement('div');
+      toolsPanel.className = 'graph-tools-panel';
+
+      const topTools = document.createElement('div');
+      const heading = document.createElement('div');
+      heading.className = 'tools-heading';
+      heading.textContent = 'Tools';
+      topTools.appendChild(heading);
+
+      const toolBtn = document.createElement('button');
+      toolBtn.type = 'button';
+      toolBtn.className = 'poly-tool-btn';
+
+      const triMatched = isTriangleCorrect(st.triangle, cfg.targetTriangle);
+      if (st.graded) {
+        toolBtn.classList.add(triMatched ? 'tool-correct' : 'tool-wrong');
+        const badge = document.createElement('span');
+        badge.className = `tool-badge ${triMatched ? '' : 'err'}`;
+        badge.textContent = triMatched ? 'Correct' : 'Incorrect';
+        toolBtn.appendChild(badge);
+      }
+
+      toolBtn.innerHTML += `
+        <svg width="20" height="18" viewBox="0 0 20 18">
+          <polygon points="10,3 3,15 17,15" fill="rgba(43,92,126,0.35)" stroke="#2b5c7e" stroke-width="1.5"/>
+          <circle cx="10" cy="3" r="2.2" fill="#fff" stroke="#2b5c7e"/>
+          <circle cx="3" cy="15" r="2.2" fill="#fff" stroke="#2b5c7e"/>
+          <circle cx="17" cy="15" r="2.2" fill="#fff" stroke="#2b5c7e"/>
+        </svg>
+        <span>${cfg.toolName}</span>
+      `;
+      topTools.appendChild(toolBtn);
+
+      const statusTxt = document.createElement('div');
+      statusTxt.className = 'tool-status-text';
+      if (st.triangle.length === 0) {
+        statusTxt.textContent = 'Click 3 vertices on the graph to draw the shaded triangle.';
+      } else if (st.triangle.length < 3) {
+        statusTxt.textContent = `Selected ${st.triangle.length}/3 vertices: ` +
+          st.triangle.map(p => `(${p.x}, $${p.y})`).join(', ');
+      } else {
+        statusTxt.textContent = `Triangle plotted: ` +
+          st.triangle.map(p => `(${p.x}, $${p.y})`).join(', ');
+      }
+      topTools.appendChild(statusTxt);
+
+      const resetBtn = document.createElement('button');
+      resetBtn.type = 'button';
+      resetBtn.className = 'reset-poly-btn';
+      resetBtn.textContent = 'Clear / Redraw Triangle';
+      resetBtn.onclick = () => {
+        st.triangle = [];
+        renderAll();
+      };
+      topTools.appendChild(resetBtn);
+
+      toolsPanel.appendChild(topTools);
+
+      // Legend
+      const legend = document.createElement('div');
+      legend.className = 'graph-legend';
+      legend.innerHTML = `
+        <h4>Legend</h4>
+        <div class="legend-item"><span class="legend-dot"></span><span>Demand</span></div>
+        <div class="legend-item"><span class="legend-dot"></span><span>Supply</span></div>
+        <div class="legend-item"><span class="legend-dot eq"></span><span>Equilibrium</span></div>
+      `;
+      toolsPanel.appendChild(legend);
+      body.appendChild(toolsPanel);
+
+      // Right Canvas Panel
+      const canvasPanel = document.createElement('div');
+      canvasPanel.className = 'graph-canvas-panel';
+
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('width', '460');
+      svg.setAttribute('height', '360');
+      svg.setAttribute('viewBox', '0 0 460 360');
+      svg.style.userSelect = 'none';
+      svg.style.maxWidth = '100%';
+
+      const ox = 95, oy = 295, plotW = 290, plotH = 230;
+      const toX = (qVal) => ox + (qVal / cfg.xMax) * plotW;
+      const toY = (pVal) => oy - (pVal / cfg.yMax) * plotH;
+
+      // Graph Title
+      const titleEl = document.createElementNS(svgNS, 'text');
+      titleEl.setAttribute('x', ox + plotW / 2);
+      titleEl.setAttribute('y', 28);
+      titleEl.setAttribute('text-anchor', 'middle');
+      titleEl.setAttribute('font-size', '15.5');
+      titleEl.setAttribute('font-weight', '500');
+      titleEl.setAttribute('fill', '#222');
+      titleEl.textContent = cfg.title;
+      svg.appendChild(titleEl);
+
+      // Grid lines
+      for (let x = 0; x <= cfg.xMax; x += cfg.xStep / 2) {
+        const gx = toX(x);
+        const gl = document.createElementNS(svgNS, 'line');
+        gl.setAttribute('x1', gx); gl.setAttribute('y1', oy - plotH);
+        gl.setAttribute('x2', gx); gl.setAttribute('y2', oy);
+        gl.setAttribute('stroke', '#f0f0f0');
+        svg.appendChild(gl);
+      }
+      for (let y = 0; y <= cfg.yMax; y += cfg.yStep) {
+        const gy = toY(y);
+        const gl = document.createElementNS(svgNS, 'line');
+        gl.setAttribute('x1', ox); gl.setAttribute('y1', gy);
+        gl.setAttribute('x2', ox + plotW); gl.setAttribute('y2', gy);
+        gl.setAttribute('stroke', '#f0f0f0');
+        svg.appendChild(gl);
+      }
+
+      // Equilibrium dashed lines
+      const eqX = toX(cfg.eq.x), eqY = toY(cfg.eq.y);
+      const eqV = document.createElementNS(svgNS, 'line');
+      eqV.setAttribute('x1', eqX); eqV.setAttribute('y1', eqY);
+      eqV.setAttribute('x2', eqX); eqV.setAttribute('y2', oy);
+      eqV.setAttribute('stroke', '#111'); eqV.setAttribute('stroke-width', '1.5');
+      eqV.setAttribute('stroke-dasharray', '4,3');
+      svg.appendChild(eqV);
+
+      const eqH = document.createElementNS(svgNS, 'line');
+      eqH.setAttribute('x1', ox); eqH.setAttribute('y1', eqY);
+      eqH.setAttribute('x2', eqX); eqH.setAttribute('y2', eqY);
+      eqH.setAttribute('stroke', '#111'); eqH.setAttribute('stroke-width', '1.5');
+      eqH.setAttribute('stroke-dasharray', '4,3');
+      svg.appendChild(eqH);
+
+      // If showAnswer is active and user's triangle is not right, show target triangle outline in green
+      if (st.graded && st.showAnswer && !triMatched) {
+        const targetPoly = document.createElementNS(svgNS, 'polygon');
+        const ptsStr = cfg.targetTriangle.map(p => `${toX(p.x)},${toY(p.y)}`).join(' ');
+        targetPoly.setAttribute('points', ptsStr);
+        targetPoly.setAttribute('fill', 'rgba(46, 125, 50, 0.22)');
+        targetPoly.setAttribute('stroke', '#2e7d32');
+        targetPoly.setAttribute('stroke-width', '2');
+        targetPoly.setAttribute('stroke-dasharray', '5,3');
+        svg.appendChild(targetPoly);
+      }
+
+      // User's drawn polygon / lines
+      if (st.triangle.length >= 2) {
+        const poly = document.createElementNS(svgNS, 'polygon');
+        const ptsStr = st.triangle.map(p => `${toX(p.x)},${toY(p.y)}`).join(' ');
+        poly.setAttribute('points', ptsStr);
+        poly.setAttribute('fill', st.triangle.length === 3 ? 'rgba(65, 105, 135, 0.55)' : 'none');
+        poly.setAttribute('stroke', '#111');
+        poly.setAttribute('stroke-width', '2');
+        svg.appendChild(poly);
+
+        if (st.triangle.length === 3) {
+          const cx = st.triangle.reduce((acc, p) => acc + toX(p.x), 0) / 3;
+          const cy = st.triangle.reduce((acc, p) => acc + toY(p.y), 0) / 3;
+          const lbl = document.createElementNS(svgNS, 'text');
+          lbl.setAttribute('x', cx + 10);
+          lbl.setAttribute('y', cy + 12);
+          lbl.setAttribute('font-size', '12.5');
+          lbl.setAttribute('font-weight', '700');
+          lbl.textContent = cfg.shortLabel;
+          svg.appendChild(lbl);
+        }
+      }
+
+      // Demand Curve
+      const dStart = cfg.demand[0], dEnd = cfg.demand[cfg.demand.length - 1];
+      const dLine = document.createElementNS(svgNS, 'line');
+      dLine.setAttribute('x1', toX(dStart.x)); dLine.setAttribute('y1', toY(dStart.y));
+      dLine.setAttribute('x2', toX(dEnd.x)); dLine.setAttribute('y2', toY(dEnd.y));
+      dLine.setAttribute('stroke', '#2b5c7e'); dLine.setAttribute('stroke-width', '2');
+      svg.appendChild(dLine);
+
+      const dLbl = document.createElementNS(svgNS, 'text');
+      dLbl.setAttribute('x', toX(dEnd.x) + 6);
+      dLbl.setAttribute('y', toY(dEnd.y) - 6);
+      dLbl.setAttribute('font-size', '12.5');
+      dLbl.setAttribute('font-weight', '600');
+      dLbl.textContent = 'D';
+      svg.appendChild(dLbl);
+
+      // Supply Curve
+      const sStart = cfg.supply[0], sEnd = cfg.supply[cfg.supply.length - 1];
+      const sLine = document.createElementNS(svgNS, 'line');
+      sLine.setAttribute('x1', toX(sStart.x)); sLine.setAttribute('y1', toY(sStart.y));
+      sLine.setAttribute('x2', toX(sEnd.x)); sLine.setAttribute('y2', toY(sEnd.y));
+      sLine.setAttribute('stroke', '#2b5c7e'); sLine.setAttribute('stroke-width', '2');
+      svg.appendChild(sLine);
+
+      const sLbl = document.createElementNS(svgNS, 'text');
+      sLbl.setAttribute('x', toX(sEnd.x) + 6);
+      sLbl.setAttribute('y', toY(sEnd.y) - 6);
+      sLbl.setAttribute('font-size', '12.5');
+      sLbl.setAttribute('font-weight', '600');
+      sLbl.textContent = 'S';
+      svg.appendChild(sLbl);
+
+      // Axes
+      const xAxis = document.createElementNS(svgNS, 'line');
+      xAxis.setAttribute('x1', ox); xAxis.setAttribute('y1', oy);
+      xAxis.setAttribute('x2', ox + plotW); xAxis.setAttribute('y2', oy);
+      xAxis.setAttribute('stroke', '#333'); xAxis.setAttribute('stroke-width', '1.5');
+      svg.appendChild(xAxis);
+
+      const yAxis = document.createElementNS(svgNS, 'line');
+      yAxis.setAttribute('x1', ox); yAxis.setAttribute('y1', oy - plotH);
+      yAxis.setAttribute('x2', ox); yAxis.setAttribute('y2', oy);
+      yAxis.setAttribute('stroke', '#333'); yAxis.setAttribute('stroke-width', '1.5');
+      svg.appendChild(yAxis);
+
+      // Ticks & Labels
+      for (let x = cfg.xStep; x <= cfg.xMax; x += cfg.xStep) {
+        const tx = toX(x);
+        const tick = document.createElementNS(svgNS, 'line');
+        tick.setAttribute('x1', tx); tick.setAttribute('y1', oy - 5);
+        tick.setAttribute('x2', tx); tick.setAttribute('y2', oy);
+        tick.setAttribute('stroke', '#333');
+        svg.appendChild(tick);
+
+        const lbl = document.createElementNS(svgNS, 'text');
+        lbl.setAttribute('x', tx); lbl.setAttribute('y', oy + 16);
+        lbl.setAttribute('text-anchor', 'middle');
+        lbl.setAttribute('font-size', '12');
+        lbl.textContent = x;
+        svg.appendChild(lbl);
+      }
+
+      for (let y = cfg.yStep; y <= cfg.yMax; y += cfg.yStep) {
+        const ty = toY(y);
+        const tick = document.createElementNS(svgNS, 'line');
+        tick.setAttribute('x1', ox); tick.setAttribute('y1', ty);
+        tick.setAttribute('x2', ox + 5); tick.setAttribute('y2', ty);
+        tick.setAttribute('stroke', '#333');
+        svg.appendChild(tick);
+
+        const lbl = document.createElementNS(svgNS, 'text');
+        lbl.setAttribute('x', ox - 8); lbl.setAttribute('y', ty + 4);
+        lbl.setAttribute('text-anchor', 'end');
+        lbl.setAttribute('font-size', '12');
+        lbl.textContent = `$${y}`;
+        svg.appendChild(lbl);
+      }
+
+      const zeroLbl = document.createElementNS(svgNS, 'text');
+      zeroLbl.setAttribute('x', ox - 6); zeroLbl.setAttribute('y', oy + 12);
+      zeroLbl.setAttribute('text-anchor', 'end');
+      zeroLbl.setAttribute('font-size', '12');
+      zeroLbl.textContent = '0';
+      svg.appendChild(zeroLbl);
+
+      // Axis Titles
+      const xTitle = document.createElementNS(svgNS, 'text');
+      xTitle.setAttribute('x', ox + plotW / 2);
+      xTitle.setAttribute('y', oy + 42);
+      xTitle.setAttribute('text-anchor', 'middle');
+      xTitle.setAttribute('font-size', '13.5');
+      xTitle.textContent = cfg.xLabel;
+      svg.appendChild(xTitle);
+
+      const yTitle = document.createElementNS(svgNS, 'text');
+      yTitle.setAttribute('x', 30);
+      yTitle.setAttribute('y', oy - plotH / 2);
+      yTitle.setAttribute('text-anchor', 'middle');
+      yTitle.setAttribute('font-size', '13.5');
+      yTitle.setAttribute('transform', `rotate(-90, 30, ${oy - plotH / 2})`);
+      yTitle.textContent = cfg.yLabel;
+      svg.appendChild(yTitle);
+
+      // Equilibrium point dot
+      const eqDot = document.createElementNS(svgNS, 'circle');
+      eqDot.setAttribute('cx', eqX); eqDot.setAttribute('cy', eqY);
+      eqDot.setAttribute('r', '3.5');
+      eqDot.setAttribute('fill', '#000');
+      svg.appendChild(eqDot);
+
+      // Draw interactive clickable vertex handles (snap points)
+      cfg.snapPoints.forEach(sp => {
+        const sx = toX(sp.x), sy = toY(sp.y);
+        const isChosen = st.triangle.some(p => Math.abs(p.x - sp.x) < 1e-3 && Math.abs(p.y - sp.y) < 1e-3);
+
+        // Larger invisible hit target + visible ring on hover/selection
+        const hitGroup = document.createElementNS(svgNS, 'g');
+        hitGroup.style.cursor = 'pointer';
+
+        const hitCircle = document.createElementNS(svgNS, 'circle');
+        hitCircle.setAttribute('cx', sx);
+        hitCircle.setAttribute('cy', sy);
+        hitCircle.setAttribute('r', '11');
+        hitCircle.setAttribute('fill', 'transparent');
+        hitGroup.appendChild(hitCircle);
+
+        const visCircle = document.createElementNS(svgNS, 'circle');
+        visCircle.setAttribute('cx', sx);
+        visCircle.setAttribute('cy', sy);
+        visCircle.setAttribute('r', isChosen ? '5' : '3.5');
+        visCircle.setAttribute('fill', isChosen ? '#000' : 'rgba(0, 102, 204, 0.25)');
+        visCircle.setAttribute('stroke', isChosen ? '#fff' : '#0066cc');
+        visCircle.setAttribute('stroke-width', '1.5');
+        hitGroup.appendChild(visCircle);
+
+        const titleTip = document.createElementNS(svgNS, 'title');
+        titleTip.textContent = `Click vertex (${sp.x}, $${sp.y})`;
+        hitGroup.appendChild(titleTip);
+
+        hitGroup.onclick = (e) => {
+          e.stopPropagation();
+          toggleTriangleVertex(st, sp);
+        };
+
+        svg.appendChild(hitGroup);
+      });
+
+      canvasPanel.appendChild(svg);
+      body.appendChild(canvasPanel);
+      widget.appendChild(body);
+      return widget;
+    }
+
+    function toggleTriangleVertex(st, pt) {
+      const existingIdx = st.triangle.findIndex(
+        p => Math.abs(p.x - pt.x) < 1e-3 && Math.abs(p.y - pt.y) < 1e-3
+      );
+      if (existingIdx !== -1) {
+        st.triangle.splice(existingIdx, 1);
+      } else {
+        if (st.triangle.length >= 3) {
+          st.triangle = [pt];
+        } else {
+          st.triangle.push(pt);
+        }
+      }
+      renderAll();
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    // Initial render
+    renderAll();
+  </script>
+</body>
+</html>
